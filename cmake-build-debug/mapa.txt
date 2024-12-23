@@ -1,0 +1,16 @@
+linhas 10
+colunas 30
+moedas 10000
+instantes_entre_novos_itens 108
+duração_item 29
+max_itens 5
+preço_venda_mercadoria 2
+preço_compra_mercadoria 1
+preço_caravana 100
+instantes_entre_novos_barbaros 4
+duração_barbaros 60
+numero_de_montanhas 20
+numero_de_cidades 20
+numero_de_mercadorias 1
+numero_de_caravanas 10
+numero_de_tripulantes 7
