@@ -35,10 +35,11 @@ Simulador::Simulador(){
 
     int num;
     string nomeFicheiro,comando;
-    std::cout << "Comando para executar (config mapa.txt):"<<endl;
-    std::cin >> comando >> nomeFicheiro;
+    cout << "Comando para executar (config mapa.txt):"<<endl;
+    cin >> comando >> nomeFicheiro;
 
-    if (comando != "config") {
+
+    if (comando != "config"||nomeFicheiro!="mapa.txt") {
         std::cerr << "Comando invalido." << std::endl;
         exit (-505);
     }
@@ -46,16 +47,16 @@ Simulador::Simulador(){
     if(f){
         while(getline(f, linha)){
             istringstream is(linha);
-            if (is >> palavra && is >> num) {
+            if ((is >> palavra) && (is >> num)) {
                 if (mapping.find(palavra) != mapping.end()) {
-                    *(mapping[palavra]) = num;
+                    *(mapping.find(palavra)->second)=num;
                 } else {
                     cerr << "Chave invalida: " << palavra << endl;
                 }
             }
         }
     }
-    if ((nCaravanas+nCidades+nMontanhas)>(dLinhas*dColunas)) {
+    if ((nCaravanas+nCidades+nMontanhas+maxItens+20)>(dLinhas*dColunas)) {
         cerr << "Erro ao alocar memoria!" << endl;
         exit(1);
     }
@@ -194,182 +195,7 @@ void Simulador::escreveData() const {
     cout << "Numero de tripulantes: " << nTripulantes << endl;
 }
 
-int Simulador::getTimeEntreItens() const {
-    return timeEntreItens;
-}
 
-void Simulador::setTimeEntreItens(int tEI){
-    timeEntreItens = tEI;
-}
-
-int Simulador::getDuracaoItem() const {
-    return duracaoItem;
-}
-
-void Simulador::setDuracaoItem(int dI) {
-    duracaoItem = dI;
-}
-
-int Simulador::getMaxItens() const {
-    return maxItens;
-}
-
-void Simulador::setMaxItens(int mI) {
-    maxItens = mI;
-}
-
-int Simulador::getDColunas() const {
-    return dColunas;
-}
-
-void Simulador::setDColunas(int dC) {
-    dColunas = dC;
-}
-
-int Simulador::getDLinhas() const {
-    return dLinhas;
-}
-
-void Simulador::setDLinhas(int dL) {
-    dLinhas = dL;
-}
-
-int Simulador::getNMontanhas() const {
-    return nMontanhas;
-}
-
-void Simulador::setNMontanhas(int nM) {
-    nMontanhas = nM;
-}
-
-int Simulador::getNCidades() const {
-    return nCidades;
-}
-
-void Simulador::setNCidades(int nC) {
-    nCidades = nC;
-}
-
-int Simulador::getNMercadorias() const {
-    return nMercadorias;
-}
-
-void Simulador::setNMercadorias(int nM) {
-    nMercadorias = nM;
-}
-
-int Simulador::getPrecoMercadoriaVenda() const {
-    return precoMercadoriaVenda;
-}
-
-void Simulador::setPrecoMercadoriaVenda(int pMV) {
-    precoMercadoriaVenda = pMV;
-}
-
-int Simulador::getPrecoMercadoriaComprar() const {
-    return precoMercadoriaComprar;
-}
-
-void Simulador::setPrecoMercadoriaComprar(int pMC) {
-    precoMercadoriaComprar = pMC;
-}
-
-int Simulador::getNtripulantes() const {
-    return nTripulantes;
-}
-
-void Simulador::setNtripulantes(int nT) {
-    Simulador::nTripulantes = nT;
-}
-
-const string &Simulador::getNomeCidades() const {
-    return nomeCidades;
-}
-
-void Simulador::setNomeCidades(const string &nC) {
-    nomeCidades = nC;
-}
-
-Cidade *Simulador::getCidade() const {
-    return cidades;
-}
-
-void Simulador::setCidade(Cidade *c) {
-    cidades = c;
-}
-Buffer *Simulador::getBuffer() const {
-    return buffer;
-}
-
-void Simulador::setBuffer(Buffer *b) {
-    buffer = b;
-}
-
-int Simulador::getNCaravanas() const {
-    return nCaravanas;
-}
-
-void Simulador::setNCaravanas(int nC) {
-    nCaravanas = nC;
-}
-
-int Simulador::getPrecoCaravanas() const {
-    return precoCaravanas;
-}
-
-void Simulador::setPrecoCaravanas(int pC) {
-    precoCaravanas = pC;
-}
-
-Caravanas *Simulador::getCaravanas() const {
-    return caravanas;
-}
-
-void Simulador::setCaravanas(Caravanas *car) {
-    caravanas = car;
-}
-
-int Simulador::getTimeEntreBarbaros() const {
-    return timeEntreBarbaros;
-}
-
-void Simulador::setTimeEntreBarbaros(int tEB) {
-    timeEntreBarbaros = tEB;
-}
-
-int Simulador::getDuracaoBarbaros() const {
-    return duracaoBarbaros;
-}
-
-void Simulador::setDuracaoBarbaros(int dB) {
-    duracaoBarbaros = dB;
-}
-
-int Simulador::getMoedasInicias() const {
-    return moedasInicias;
-}
-
-void Simulador::setMoedasInicias(int mI) {
-    moedasInicias = mI;
-}
-
-int Simulador::corvertor(char a) {
-    if (isdigit(a)) {
-        int numero = a - '0';
-        return numero;
-    }else{
-        return -1;
-    }
-}
-
-Simulador::~Simulador() {
-    delete[] cidades;
-    delete[] posicoes;
-    delete[] montanhas;
-    delete[] caravanas;
-    delete user;
-    delete buffer;
-}
 
 void Simulador::executaComando(const string& linha) {
     // Mapeamento de comandos para identificadores únicos
@@ -777,4 +603,180 @@ void Simulador::run() {
         }
         cout << iteracoes << endl;
     }
+}
+int Simulador::getTimeEntreItens() const {
+    return timeEntreItens;
+}
+
+void Simulador::setTimeEntreItens(int tEI){
+    timeEntreItens = tEI;
+}
+
+int Simulador::getDuracaoItem() const {
+    return duracaoItem;
+}
+
+void Simulador::setDuracaoItem(int dI) {
+    duracaoItem = dI;
+}
+
+int Simulador::getMaxItens() const {
+    return maxItens;
+}
+
+void Simulador::setMaxItens(int mI) {
+    maxItens = mI;
+}
+
+int Simulador::getDColunas() const {
+    return dColunas;
+}
+
+void Simulador::setDColunas(int dC) {
+    dColunas = dC;
+}
+
+int Simulador::getDLinhas() const {
+    return dLinhas;
+}
+
+void Simulador::setDLinhas(int dL) {
+    dLinhas = dL;
+}
+
+int Simulador::getNMontanhas() const {
+    return nMontanhas;
+}
+
+void Simulador::setNMontanhas(int nM) {
+    nMontanhas = nM;
+}
+
+int Simulador::getNCidades() const {
+    return nCidades;
+}
+
+void Simulador::setNCidades(int nC) {
+    nCidades = nC;
+}
+
+int Simulador::getNMercadorias() const {
+    return nMercadorias;
+}
+
+void Simulador::setNMercadorias(int nM) {
+    nMercadorias = nM;
+}
+
+int Simulador::getPrecoMercadoriaVenda() const {
+    return precoMercadoriaVenda;
+}
+
+void Simulador::setPrecoMercadoriaVenda(int pMV) {
+    precoMercadoriaVenda = pMV;
+}
+
+int Simulador::getPrecoMercadoriaComprar() const {
+    return precoMercadoriaComprar;
+}
+
+void Simulador::setPrecoMercadoriaComprar(int pMC) {
+    precoMercadoriaComprar = pMC;
+}
+
+int Simulador::getNtripulantes() const {
+    return nTripulantes;
+}
+
+void Simulador::setNtripulantes(int nT) {
+    Simulador::nTripulantes = nT;
+}
+
+const string &Simulador::getNomeCidades() const {
+    return nomeCidades;
+}
+
+void Simulador::setNomeCidades(const string &nC) {
+    nomeCidades = nC;
+}
+
+Cidade *Simulador::getCidade() const {
+    return cidades;
+}
+
+void Simulador::setCidade(Cidade *c) {
+    cidades = c;
+}
+Buffer *Simulador::getBuffer() const {
+    return buffer;
+}
+
+void Simulador::setBuffer(Buffer *b) {
+    buffer = b;
+}
+
+int Simulador::getNCaravanas() const {
+    return nCaravanas;
+}
+
+void Simulador::setNCaravanas(int nC) {
+    nCaravanas = nC;
+}
+
+int Simulador::getPrecoCaravanas() const {
+    return precoCaravanas;
+}
+
+void Simulador::setPrecoCaravanas(int pC) {
+    precoCaravanas = pC;
+}
+
+Caravanas *Simulador::getCaravanas() const {
+    return caravanas;
+}
+
+void Simulador::setCaravanas(Caravanas *car) {
+    caravanas = car;
+}
+
+int Simulador::getTimeEntreBarbaros() const {
+    return timeEntreBarbaros;
+}
+
+void Simulador::setTimeEntreBarbaros(int tEB) {
+    timeEntreBarbaros = tEB;
+}
+
+int Simulador::getDuracaoBarbaros() const {
+    return duracaoBarbaros;
+}
+
+void Simulador::setDuracaoBarbaros(int dB) {
+    duracaoBarbaros = dB;
+}
+
+int Simulador::getMoedasInicias() const {
+    return moedasInicias;
+}
+
+void Simulador::setMoedasInicias(int mI) {
+    moedasInicias = mI;
+}
+
+int Simulador::corvertor(char a) {
+    if (isdigit(a)) {
+        int numero = a - '0';
+        return numero;
+    }else{
+        return -1;
+    }
+}
+
+Simulador::~Simulador() {
+    delete[] cidades;
+    delete[] posicoes;
+    delete[] montanhas;
+    delete[] caravanas;
+    delete user;
+    delete buffer;
 }
