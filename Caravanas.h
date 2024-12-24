@@ -7,11 +7,14 @@ using namespace std;
 class Caravanas {
     int idcar,preco,nagua,ntripulantes,maxtripulantes;
     int carvida,carataque,velocidade;
-    string tipocar;
+    char tipocar;
     string mercadoria[10];
     int x,y;
 
 public:
+    char getTipocar(){
+        return tipocar;
+    }
     int getX() const {
         return x;
     }
@@ -28,9 +31,9 @@ public:
         this->y = y;
     }
 
-    Caravanas(int idcar=0,const string& tipocar="combate");
-    int getidcar(){return idcar;};
-    void setIdcar(int i){idcar=i;};
+    Caravanas(char idcar=' ',char tipocar='C');
+    char getidcar(){return idcar;};
+    void setIdcar(char i){idcar=i;};
     int getpreco(){return preco;}
 };
 #endif //CARAVANAS_H

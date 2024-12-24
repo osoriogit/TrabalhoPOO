@@ -51,7 +51,7 @@ private:
     public:
     Cidade(char nome='c',int ntripulantes=10,int ramX=0,int ramY=0);
 
-    void vendecaravanas(Caravanas carname);
+    void vendeCaravanas(char carname);
 
 };
 

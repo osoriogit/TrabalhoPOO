@@ -31,7 +31,7 @@ class Simulador {
 
     //caravanas
     int nCaravanas{}, precoCaravanas{};//preco caravanas
-
+    int nCaravanasVendidas=0;
     //user e barbaros
     int timeEntreBarbaros{}, duracaoBarbaros{}, moedasInicias{};
 

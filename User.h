@@ -19,11 +19,11 @@ public:
     int getiduser();
     int getmoedas();
     int getncars();
-    Caravanas getusercars();
+    Caravanas getusercars(int i);
     void setncars(int n);
     void setusercars(Caravanas& carname);
     void setmoedas(int nmoedas);
-    bool comprarusercar(Caravanas carname,Cidade cidadename);
+    bool comprarusercar(Caravanas car);
     int getX() const {
         return x;
     }

@@ -10,7 +10,6 @@ Cidade::Cidade(char nome,int nTripulantes,int ramX,int ramY) {
     y=ramY;
 
 }
-void Cidade::vendecaravanas(Caravanas carname) {
-    std::cout << "Vendecaravanas com id :" <<carname.getidcar()<<std::endl;
+void Cidade::vendeCaravanas(char carname) {
 
 }
