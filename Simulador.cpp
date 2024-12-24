@@ -226,7 +226,7 @@ void Simulador::executaComando(const string& linha) {
 
     // Switch para tratar os comandos
     switch (identificadorComando) {
-        case 1:
+        case 1://faz esta afonso pls haha simples pls
             /* exec <nomeFicheiro> - Lê comandos do ficheiro de texto designado por nomeFicheiro, um por linha, e
             executa-os. Este comando é muito útil para executar um conjunto de comandos predefinido, previamente
             gravados num ficheiro. Permite, assim, poupar imenso tempo durante os testes, carregando uma
@@ -297,15 +297,42 @@ void Simulador::executaComando(const string& linha) {
                 nCaravanasVendidas++;
                 break;
             }
-        /* case 4:
+        case 4:
             /* precos – Lista os preços das mercadorias (igual em todas as cidades).
-            // void listaPrecos();
+            // void listaPrecos();*/
             cout << "\nComando 'precos'" << endl;
+            cout <<"\npreço mercadorias: "<<precoMercadoriaVenda<<endl;
             break;
         case 5:
             // cidade <C> - Lista conteúdo da cidade C (caravanas existentes)
             // void listaCidadeInfo(partes[1]);
             cout << "\nComando 'cidade'" << endl;
+            {
+                char cNcidade=partes[1][0];
+                int icNcidade=-1;
+                cout <<"\nA verificar se a cidade "<<cNcidade<<" existe";
+                for (int i = 0; i < nCidades; ++i) {
+                    if (cidades[i].getNome()==cNcidade){
+                        icNcidade=i;
+                        std::cout <<"\nA verificar se a cidade "<<cNcidade<<" tem conteudos disponiveis";
+                    }
+                }
+                if (icNcidade==-1){cout <<"\nA cidade "<<cNcidade<<"nao existe";break;}else{
+                    cout<<"\n\tconteudos cidade:"
+                    <<"\nNome cidade: "<<
+                    cidades[icNcidade].getNome()
+                    <<"\nNumero de tripulantes: "<<
+                    cidades[icNcidade].getTripulantes()
+                    <<"\nCordenadas: X:"<<
+                    cidades[icNcidade].getX()<<" , Y:"<<cidades[icNcidade].getY()
+                    ;
+                    for (int i = 0; i < nCaravanas; ++i) {
+                        cout <<"\nautocaravana: "<<caravanas[i].getidcar()<<" do tipo "<<caravanas[i].getTipocar();
+                    }
+
+                }
+
+            }
             break;
         case 6:
             // caravana <C> - mostra a descrição da caravana C (todos os detalhes)
@@ -391,7 +418,7 @@ void Simulador::executaComando(const string& linha) {
             //o utilizador pode iniciar nova simulação, ou sair do programa
             // void executaTerminar();
             cout << "\nComando 'terminar'" << endl;
-            break;*/
+            break;
         default:
             cout << "\nComando nao existe!" << endl;
             break;
