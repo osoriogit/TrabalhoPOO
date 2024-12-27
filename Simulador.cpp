@@ -147,12 +147,11 @@ void Simulador::escreveMapa(){
             buffer->escreve(xi,yi,'.');
         }
     }
-    //escreveCidades
-    for (int i = 0; i < getNCidades(); ++i) {
-        char tempc=cidades[i].getNome() ;
-        int tempx=cidades[i].getX();
-        int tempy=cidades[i].getY();
-       buffer->escreve(tempx,tempy,tempc);
+    //escreveMontanhas
+    for (int i = 0; i < getNMontanhas(); ++i) {
+        int tempx=montanhas[i].getX();
+        int tempy=montanhas[i].getY();
+        buffer->escreve(tempx,tempy,'m');
     }
     //escreveCaravanas
     for (int i = 0; i < nCaravanas; ++i) {
@@ -168,11 +167,12 @@ void Simulador::escreveMapa(){
         int tempy=caravanas[i].getY();
         buffer->escreve(tempx,tempy,tempc);
     }
-    //escreveMontanhas
-    for (int i = 0; i < getNMontanhas(); ++i) {
-        int tempx=montanhas[i].getX();
-        int tempy=montanhas[i].getY();
-        buffer->escreve(tempx,tempy,'m');
+    //escreveCidades
+    for (int i = 0; i < getNCidades(); ++i) {
+        char tempc=cidades[i].getNome() ;
+        int tempx=cidades[i].getX();
+        int tempy=cidades[i].getY();
+        buffer->escreve(tempx,tempy,tempc);
     }
     //write user
     int tmpx=caravanas->getX();
@@ -338,17 +338,143 @@ void Simulador::executaComando(const string& linha) {
             // caravana <C> - mostra a descrição da caravana C (todos os detalhes)
             // void executaCaravana(stoi(partes[1]));
             cout << "\nComando 'caravana'" << endl;
+            {
+                char cNcaravana=partes[1][0];
+                int icNcaravana=-1;
+                Caravanas caravanatemp(-5,'ç');
+                for (int i = 0; i < nCaravanas; ++i) {
+                    if (caravanas[i].getidcar()==cNcaravana)
+                    {
+                        icNcaravana=i;
+                        std::cout <<"\nA autocaravana "<<partes[1][0]<<" Tem as seguintes caracteristicas";
+                        caravanatemp=caravanas[i];
+                    }
+                }
+                for (int i = 0; i < nCaravanasVendidas; ++i) {
+                    if (user->getusercars(i).getidcar()==cNcaravana)
+                    {
+                        icNcaravana=i;
+                        std::cout <<"\nA autocaravana "<<partes[1][0]<<" Tem as seguintes caracteristicas";
+                        caravanatemp=caravanas[i];
+                    }
+                }
+                if (icNcaravana==-1){cout <<"\nautocaravana com esse nome não diponivel";break;}
+
+                cout << "\nNome caravana: "<<caravanatemp.getidcar();
+                cout << "\npreco: "<<caravanatemp.getpreco();
+                cout << "\nTipo: "<<caravanatemp.getTipocar();
+                cout <<"\n nagua:"<<caravanatemp.getnagua();
+                cout <<"\n ntripulantes:"<<caravanatemp.getntripulantes();
+                cout <<"\n carvida: "<<caravanatemp.getcarvida();
+                cout <<"\n carataque "<<caravanatemp.getcarataque();
+                cout <<"\n velocidade: "<<caravanatemp.getvelocidade();
+                cout <<"\n mercadoria Cidade: "<<caravanatemp.getmercadoriaCidade()<<" toneladas";
+                cout <<"\n mercadoria: ";
+                for (int i = 0; i < 9; ++i) {
+                    std::cout << caravanatemp.getmercadoria(i);
+                }
+
+            }
             break;
         case 7:
             // compra <N> <M> - Compra M toneladas de mercadorias para a caravana N, o qual deverá estar numa
             //cidade nessa altura
             // void executaCompra(stoi(partes[1]), stoi(partes[2]));
             cout << "\nComando 'compra'" << endl;
+            {
+                int flagUserSystem=-1;
+                char cNcaravana=partes[1][0];
+                int icNcaravana=-1;
+                Caravanas caravanatemp(-5,'ç');
+                for (int i = 0; i < nCaravanas; ++i) {
+                    if (caravanas[i].getidcar()==cNcaravana)
+                    {
+                        icNcaravana=i;
+                        std::cout <<"\nA autocaravana "<<partes[1][0]<<" a ser localizada";
+                        caravanatemp=caravanas[i];
+                        flagUserSystem=1;
+                    }
+                }
+                for (int i = 0; i < nCaravanasVendidas; ++i) {
+                    if (user->getusercars(i).getidcar()==cNcaravana)
+                    {
+                        icNcaravana=i;
+                        std::cout <<"\nA autocaravana "<<partes[1][0]<<" a ser localizada";
+                        caravanatemp=caravanas[i];
+                        flagUserSystem=0;
+                    }
+                }
+                if (icNcaravana==-1){cout <<"\nautocaravana com esse nome não diponivel";break;}
+                char cNcidade;
+                int icNcidade=-1;
+                for (int i = 0; i < nCidades; ++i) {
+                    if (cidades[i].getX()==caravanatemp.getX() && cidades[i].getY()==caravanatemp.getY()){
+                        icNcidade=i;
+                        cNcidade=cidades[i].getNome();
+                        std::cout <<"\nA Autocaravana encontra se na cidade "<<cNcidade;
+                    }
+                }
+                if (icNcidade==-1){cout <<"\nautocaravana não se encontra numa cidade";break;}
+
+                int quilos=cidades[icNcidade].sellmercadoria(partes[2][0]);
+                if (quilos==-1){cout<<"\ncidade nao tem mercadoria suficiente";break;}
+                caravanatemp.novamercadoria(quilos);
+                if (flagUserSystem==1){
+                        caravanas[icNcaravana]=caravanatemp;
+                }
+                if (flagUserSystem==0){
+                    user->setusercar(caravanatemp,icNcaravana);
+                }
+            }
             break;
         case 8:
             // vende <N> - Vende toda a mercadoria da caravana N, o qual deverá estar numa cidade
             // void executaVende(stoi(partes[1]));
             cout << "\nComando 'vende'" << endl;
+            {
+                int flagUserSystem=-1;
+                char cNcaravana=partes[1][0];
+                int icNcaravana=-1;
+                Caravanas caravanatemp(-5,'ç');
+                for (int i = 0; i < nCaravanas; ++i) {
+                    if (caravanas[i].getidcar()==cNcaravana)
+                    {
+                        icNcaravana=i;
+                        std::cout <<"\nA autocaravana "<<partes[1][0]<<" a ser localizada";
+                        caravanatemp=caravanas[i];
+                        flagUserSystem=1;
+                    }
+                }
+                for (int i = 0; i < nCaravanasVendidas; ++i) {
+                    if (user->getusercars(i).getidcar()==cNcaravana)
+                    {
+                        icNcaravana=i;
+                        std::cout <<"\nA autocaravana "<<partes[1][0]<<" a ser localizada";
+                        caravanatemp=caravanas[i];
+                        flagUserSystem=0;
+                    }
+                }
+                if (icNcaravana==-1){cout <<"\nautocaravana com esse nome não diponivel";break;}
+                char cNcidade;
+                int icNcidade=-1;
+                for (int i = 0; i < nCidades; ++i) {
+                    if (cidades[i].getX()==caravanatemp.getX() && cidades[i].getY()==caravanatemp.getY()){
+                        icNcidade=i;
+                        cNcidade=cidades[i].getNome();
+                        std::cout <<"\nA Autocaravana encontra se na cidade "<<cNcidade;
+                    }
+                }
+                if (icNcidade==-1){cout <<"\nautocaravana não se encontra numa cidade";break;}
+                user->addmoedas(
+                cidades[icNcaravana].compramercadoria(caravanatemp.sellmercadoria(0),precoMercadoriaVenda)
+                );
+                if (flagUserSystem==1){
+                        caravanas[icNcaravana]=caravanatemp;
+                }
+                if (flagUserSystem==0){
+                    user->setusercar(caravanatemp,icNcaravana);
+                }
+            }
             break;
         case 9:
             // move <N> <X> - Move a caravana com o número N uma posição na direção X: D (direita), E (esquerda),
@@ -356,6 +482,38 @@ void Simulador::executaComando(const string& linha) {
             //esquerda), BD (baixo-direita)
             // void executaMove(stoi(partes[1]), partes[2]);
             cout << "\nComando 'move'" << endl;
+            {
+                int flagUserSystem=-1;
+                char cNcaravana=partes[1][0];
+                int icNcaravana=-1;
+                Caravanas caravanatemp(-5,'ç');
+                for (int i = 0; i < nCaravanas; ++i) {
+                    if (caravanas[i].getidcar()==cNcaravana)
+                    {
+                        icNcaravana=i;
+                        std::cout <<"\nA autocaravana "<<partes[1][0]<<" a ser localizada";
+                        caravanatemp=caravanas[i];
+                        flagUserSystem=1;
+                    }
+                }
+                for (int i = 0; i < nCaravanasVendidas; ++i) {
+                    if (user->getusercars(i).getidcar()==cNcaravana)
+                    {
+                        icNcaravana=i;
+                        std::cout <<"\nA autocaravana "<<partes[1][0]<<" a ser localizada";
+                        caravanatemp=caravanas[i];
+                        flagUserSystem=0;
+                    }
+                }
+                if (icNcaravana==-1){cout <<"\nautocaravana com esse nome não diponivel";break;}
+                //fazer mover a autocaravana temp garantir que só se move para cima de montanhas se for do tipo m
+                if (flagUserSystem==1){
+                        caravanas[icNcaravana]=caravanatemp;
+                }
+                if (flagUserSystem==0){
+                    user->setusercar(caravanatemp,icNcaravana);
+                }
+            }
             break;
         case 10:
             // auto <N> - Coloca a caravana N em “auto-gestão”, ou seja, a caravana passa a ter o seu comportamento

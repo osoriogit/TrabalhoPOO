@@ -41,6 +41,13 @@ public:
     }
     ~User();
 
+    void setusercar(const Caravanas & caravanas, int ic_ncaravana) {
+        usercars[ic_ncaravana] = caravanas;
+    }
+
+    void addmoedas(int moedas) {
+        this->moedas += moedas;
+    }
 };
 
 

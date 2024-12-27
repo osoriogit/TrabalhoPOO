@@ -9,6 +9,7 @@ class Caravanas {
     int carvida,carataque,velocidade;
     char tipocar;
     string mercadoria[10];
+    int mercadoriaCidade=0;
     int x,y;
 
 public:
@@ -29,6 +30,50 @@ public:
 
     void setY(int y) {
         this->y = y;
+    }
+
+    int getnagua() {
+        return nagua;
+    }
+
+    int getntripulantes() {
+        return ntripulantes;
+    }
+
+    int getcarvida() {
+        return carvida;
+    }
+
+    int getcarataque() {
+        return carataque;
+    }
+
+    int getvelocidade() {
+        return velocidade;
+    }
+
+    string getmercadoria(int ia) {
+        return mercadoria[ia];
+    }
+
+    void novamercadoria(int quilos) {
+        mercadoriaCidade +=quilos;
+    }
+
+    int getmercadoriaCidade() {
+        return mercadoriaCidade;
+    }
+
+    int sellmercadoria(int i) {
+        if(mercadoriaCidade==0) {
+            int a=mercadoriaCidade;
+            mercadoriaCidade=0;
+            return a;
+        }
+        if(i<=mercadoriaCidade) {
+            mercadoriaCidade-=i;
+            return i;
+        } else {return -1;}
     }
 
     Caravanas(char idcar=' ',char tipocar='C');

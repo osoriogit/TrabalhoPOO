@@ -44,10 +44,24 @@ public:
         this->y = y;
     }
 
+    int sellmercadoria(char value) {
+        if (mercadoria-value>0) {
+            mercadoria = mercadoria-value;
+            return value;
+        }
+        return -1;
+    }
+
+    int compramercadoria(int nmercadoria,int preco) {
+        mercadoria +=nmercadoria;
+        return nmercadoria*preco;
+    }
+
 private:
     char nome;
     int nTripulantes;
     int x,y;
+    int mercadoria=100;
     public:
     Cidade(char nome='c',int ntripulantes=10,int ramX=0,int ramY=0);
 
