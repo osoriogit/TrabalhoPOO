@@ -1,5 +1,6 @@
 #include "Caravanas.h"
 Caravanas::Caravanas(char idcar,char tipocar) {
+            this->idcar = idcar;
             preco=10;
             nagua=100;
             ntripulantes=10;

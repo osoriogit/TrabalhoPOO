@@ -91,6 +91,7 @@ Simulador::Simulador(){
         caravanas[i].setIdcar(('A'+i));
         caravanas[i].setX(randomX);
         caravanas[i].setY(randomY);
+        //set tipo caravana
     }
 
     montanhas= new Montanhas[nMontanhas];
@@ -341,7 +342,7 @@ void Simulador::executaComando(const string& linha) {
             {
                 char cNcaravana=partes[1][0];
                 int icNcaravana=-1;
-                Caravanas caravanatemp(-5,'ç');
+                Caravanas caravanatemp(-5,'z');
                 for (int i = 0; i < nCaravanas; ++i) {
                     if (caravanas[i].getidcar()==cNcaravana)
                     {
@@ -385,7 +386,7 @@ void Simulador::executaComando(const string& linha) {
                 int flagUserSystem=-1;
                 char cNcaravana=partes[1][0];
                 int icNcaravana=-1;
-                Caravanas caravanatemp(-5,'ç');
+                Caravanas caravanatemp(-5,'z');
                 for (int i = 0; i < nCaravanas; ++i) {
                     if (caravanas[i].getidcar()==cNcaravana)
                     {
@@ -435,7 +436,7 @@ void Simulador::executaComando(const string& linha) {
                 int flagUserSystem=-1;
                 char cNcaravana=partes[1][0];
                 int icNcaravana=-1;
-                Caravanas caravanatemp(-5,'ç');
+                Caravanas caravanatemp(-5,'z');
                 for (int i = 0; i < nCaravanas; ++i) {
                     if (caravanas[i].getidcar()==cNcaravana)
                     {
@@ -486,7 +487,7 @@ void Simulador::executaComando(const string& linha) {
                 int flagUserSystem=-1;
                 char cNcaravana=partes[1][0];
                 int icNcaravana=-1;
-                Caravanas caravanatemp(-5,'ç');
+                Caravanas caravanatemp(-5,'z');
                 for (int i = 0; i < nCaravanas; ++i) {
                     if (caravanas[i].getidcar()==cNcaravana)
                     {
@@ -506,7 +507,7 @@ void Simulador::executaComando(const string& linha) {
                     }
                 }
                 if (icNcaravana==-1){cout <<"\nautocaravana com esse nome não diponivel";break;}
-                //fazer mover a autocaravana temp garantir que só se move para cima de montanhas se for do tipo m
+                //fazer mover a autocaravana temp garantir que só se move para cima de montanhas se for do tipo secreto
                 if (flagUserSystem==1){
                         caravanas[icNcaravana]=caravanatemp;
                 }
