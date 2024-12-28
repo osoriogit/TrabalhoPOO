@@ -57,13 +57,18 @@ public:
         return nmercadoria*preco;
     }
 
+    int compraTripulantes(char value) {
+        nTripulantes-=value;
+        return -value;
+    }
+
 private:
     char nome;
     int nTripulantes;
     int x,y;
     int mercadoria=100;
     public:
-    Cidade(char nome='c',int ntripulantes=10,int ramX=0,int ramY=0);
+    Cidade(char nome='c',int ntripulantes=10000,int ramX=0,int ramY=0);
 
     void vendeCaravanas(char carname);
 

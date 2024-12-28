@@ -20,13 +20,18 @@ public:
         return colunas;
     }
 
+    char getpos(int x, int y) {
+        char c = matriz[x + y * colunas];
+        return c;
+    }
+
 private:
     char *matriz;
     int linhas;
     int colunas;
 
 public:
-    Buffer(int linhas, int colunas);
+    Buffer(int linhas=0, int colunas=0);
 
     char & devolveMatriz(int x, int y) const;
 

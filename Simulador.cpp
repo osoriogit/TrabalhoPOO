@@ -159,8 +159,7 @@ int* Simulador::gerarPosicoesMatriz(int linhas, int colunas) {
 
     return cordenadasCidade; // Retorna o array
 }
-
-void Simulador::escreveMapa(){
+void Simulador::escreveBuffer() {
     //escreve deserto
     for (int yi = 0; yi < dLinhas; ++yi) {
         for (int xi = 0; xi < dColunas; ++xi) {
@@ -194,6 +193,9 @@ void Simulador::escreveMapa(){
         int tempy=cidades[i].getY();
         buffer->escreve(tempx,tempy,tempc);
     }
+}
+void Simulador::escreveMapa(){
+    escreveBuffer();
     //write user
     int tmpx=caravanas->getX();
     int tmpy=caravanas->getY();
@@ -553,8 +555,6 @@ void Simulador::executaComando(const string& linha) {
             cout << "\nComando 'barbaro'" << endl;
             //verificar se é as cordenadas existem e se esta la alguma montanha ou alguma caravana
             {
-                if (partes[1][0]>dLinhas){ cout << "erro"; break;}
-                if (partes[2][0]>dColunas){ cout << "erro"; break;}
                 char cNcidade;
                 int icNcidade=-1;
                 for (int i = 0; i < nCaravanas; ++i) {
@@ -569,49 +569,147 @@ void Simulador::executaComando(const string& linha) {
                         break;
                     }
                 }
+
+                Caravanas temp[nCaravanas+1];
+                for (int i = 0; i < nCaravanas; ++i) {
+                    temp[i]=caravanas[i];
+                }
+                Caravanas Barbaro;
+                //atualizar parametros barbaro e erros melhor exibidos
+                temp[nCaravanas]=Barbaro;
+                nCaravanas++;
+                caravanas=new Caravanas[nCaravanas];
+                for (int i = 0; i < nCaravanas; ++i) {
+                    caravanas[i]=temp[i];
+                }
+                break;
             }
-            //substituicao do array dinamico de autocaravanas por uma copia com a barbara adicionada
-            //crias novo temp maior, copia do antigo para o temp, cria novo objeto caravana, free temp
-            break;
         case 13:
             // areia <l> <c> <r> - Cria uma tempestade de areia na posição l, c com raio r posições (é um quadrado de
             //posições)
-            // void executaAreia(stoi(partes[1]), stoi(partes[2]), stoi(partes[3]));
+            // void executaAreia(stoi(partes[1]), stoi(partes[2]), stoi(partes[3]))
             cout << "\nComando 'areia'" << endl;
+            escreveBuffer();
+            if((buffer->getpos(partes[2][0],partes[1][0]))=='.') {
+                //executa tempestade
+                //quem esta na area e afetar
+                //%50prob Comercio de ser destruida
+            }
+            else{/*erro*/}
             break;
         case 14:
             // moedas <N> - Acrescenta N moedas ao jogador (pode ser um valor negativo). Isto serve para testes
             // void executaMoedas(stoi(partes[1]));
             cout << "\nComando 'moedas'" << endl;
+            user->addmoedas(partes[1][0]);
             break;
         case 15:
             // tripul <N> <T> - Compra T tripulantes para a caravana N desde que essa caravana esteja numa cidade
             // void executaTripul(stoi(partes[1]), stoi(partes[2]));
             cout << "\nComando 'tripul'" << endl;
+            {
+                int flagUserSystem=-1;
+                char cNcaravana=partes[1][0];
+                int icNcaravana=-1;
+                Caravanas caravanatemp(-5,'z');
+                for (int i = 0; i < nCaravanas; ++i) {
+                    if (caravanas[i].getidcar()==cNcaravana)
+                    {
+                        icNcaravana=i;
+                        std::cout <<"\nA autocaravana "<<partes[1][0]<<" a ser localizada";
+                        caravanatemp=caravanas[i];
+                        flagUserSystem=1;
+                    }
+                }
+                for (int i = 0; i < nCaravanasVendidas; ++i) {
+                    if (user->getusercars(i).getidcar()==cNcaravana)
+                    {
+                        icNcaravana=i;
+                        std::cout <<"\nA autocaravana "<<partes[1][0]<<" a ser localizada";
+                        caravanatemp=caravanas[i];
+                        flagUserSystem=0;
+                    }
+                }
+                if (icNcaravana==-1){cout <<"\nautocaravana com esse nome não diponivel";break;}
+                char cNcidade;
+                int icNcidade=-1;
+                for (int i = 0; i < nCidades; ++i) {
+                    if (cidades[i].getX()==caravanatemp.getX() && cidades[i].getY()==caravanatemp.getY()){
+                        icNcidade=i;
+                        cNcidade=cidades[i].getNome();
+                        std::cout <<"\nA Autocaravana encontra se na cidade "<<cNcidade;
+                    }
+                }
+                if (icNcidade==-1){cout <<"\nautocaravana não se encontra numa cidade";break;}
+
+                if(user->getmoedas()>=partes[2][0]||caravanatemp.getntripulantes()+partes[2][0]<=caravanatemp.getmaxntripulantes()) {
+                    user->addmoedas(cidades[icNcidade].compraTripulantes(partes[2][0]));
+                    caravanatemp.addtripulantes(partes[2][0]);
+                }else{/*erro*/break;}
+                if (flagUserSystem==1){
+                        caravanas[icNcaravana]=caravanatemp;
+                }
+                if (flagUserSystem==0){
+                    user->setusercar(caravanatemp,icNcaravana);
+                }
+            }
             break;
         case 16:
-            // saves <nome> - Faz uma cópia do estado do buffer (aspeto visual apenas – não os dados do
+            // saves <n> - Faz uma cópia do estado do buffer (aspeto visual apenas – não os dados do
             //simulador) usado para apresentar a informação apresentada no turno atual. A cópia é armazenada em
             //memória associando-o ao nome indicado
             // void executaSaves(partes[1]);
             cout << "\nComando 'saves'" << endl;
+            if (nsaves==0){
+                nsaves++;
+                saves=new Buffer[nsaves];
+                saves[0]=*buffer;
+            }else {
+                nsaves++;
+                Buffer tempsaves[nsaves];
+                for (int i = 0; i < nsaves; ++i) {
+                    tempsaves[i]=saves[i];
+                }
+                saves=new Buffer[nsaves];
+                for (int i = 0; i < nsaves; ++i) {
+                    saves[i]=tempsaves[i];
+                }
+                saves[nsaves-1]=*buffer;
+            }
             break;
         case 17:
-            // loads <nome> - Recupera a cópia do buffer previamente armazenado em memória com o nome indicado,
+            // loads <n> - Recupera a cópia do buffer previamente armazenado em memória com o nome indicado,
             //permitindo assim ver um determinado instante anterior (para comparação ou que for). Esta operação não
             //altera o estado da simulação atual
             // void executaLoads(partes[1]);
             cout << "\nComando 'loads'" << endl;
+            *buffer=saves[partes[1][0]];
             break;
         case 18:
             // lists - Lista os nomes das cópias do buffer existentes
             // void listaNomesCopias();
             cout << "\nComando 'lists'" << endl;
+            for (int i = 0; i < nsaves; ++i) {
+                cout<<i;
+            }
             break;
         case 19:
             // dels <nome> - Apaga a cópia do buffer em memória associada ao nome indicado
             // void executaDels(partes[1]);
             cout << "\nComando 'dels'" << endl;
+            {
+                saves[partes[1][0]]=saves[nsaves-1];
+
+                nsaves--;
+                Buffer tempsaves[nsaves];
+                for (int i = 0; i < nsaves; ++i) {
+                    tempsaves[i]=saves[i];
+                }
+                saves=new Buffer[nsaves];
+                for (int i = 0; i < nsaves; ++i) {
+                    saves[i]=tempsaves[i];
+                }
+            }
             break;
         case 20:
             // terminar – Termina a simulação, sendo apresentada a pontuação. O simulador regressa à fase 1, onde
@@ -991,6 +1089,7 @@ Simulador::~Simulador() {
     delete[] posicoes;
     delete[] montanhas;
     delete[] caravanas;
+    delete[] saves;
     delete user;
     delete buffer;
 }

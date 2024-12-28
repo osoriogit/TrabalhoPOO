@@ -131,6 +131,14 @@ public:
         }
     }
 
+    int getmaxntripulantes() {
+        return maxtripulantes;
+    }
+
+    void addtripulantes(char value) {
+        ntripulantes+=value;
+    }
+
     Caravanas(char idcar=' ',char tipocar='C');
     char getidcar(){return idcar;};
     void setIdcar(char i){idcar=i;};

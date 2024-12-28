@@ -23,6 +23,8 @@ class Simulador {
     Cidade *cidades;
     Montanhas *montanhas;
     Caravanas *caravanas;
+    Buffer *saves;
+    int nsaves=0;
     int *posicaoAutocaravanasInicial;
     User *user;
 
@@ -61,6 +63,8 @@ public:
 
     void escreveMapa();
     int* gerarPosicoesMatriz(int linhas, int colunas);
+
+    void escreveBuffer();
 
     void removerParesNegativos(int* arr, int tamanho);
 
