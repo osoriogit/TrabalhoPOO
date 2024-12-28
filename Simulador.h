@@ -82,6 +82,10 @@ public:
         remake = i;
     }
 
+    bool isLetraMinusculaChar(char getpos) {
+        return ((getpos >= 'a' && getpos <= 'z')&&(getpos!='m'));
+    }
+
     void executaComando(const string& linha);
     bool isNumeroPositivo(const string& str);
     bool isLetraMinuscula(const string& letra);

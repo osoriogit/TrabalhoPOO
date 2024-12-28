@@ -530,6 +530,72 @@ void Simulador::executaComando(const string& linha) {
                 }
                 if (icNcaravana==-1){cout <<"\nautocaravana com esse nome não diponivel";break;}
                 //fazer mover a autocaravana temp garantir que só se move para cima de montanhas se for do tipo secreto
+                escreveBuffer();
+                //direita
+                if((partes[2][0]=='D')&&(
+                ((buffer->getpos(caravanatemp.getX()+1,caravanatemp.getY())=='.')
+                ||(((buffer->getpos(caravanatemp.getX()+1,caravanatemp.getY())=='m'))&&(caravanatemp.getTipocar()=='S')))
+                ||isLetraMinusculaChar(buffer->getpos(caravanatemp.getX()+1,caravanatemp.getY()))
+                )){caravanatemp.setX(caravanatemp.getX()+1);}
+                //esquerda
+                if((partes[2][0]=='E')&&(
+                ((buffer->getpos(caravanatemp.getX()-1,caravanatemp.getY())=='.')
+                ||(((buffer->getpos(caravanatemp.getX()-1,caravanatemp.getY())=='m'))&&(caravanatemp.getTipocar()=='S')))
+                ||isLetraMinusculaChar(buffer->getpos(caravanatemp.getX()-1,caravanatemp.getY()))
+                )){caravanatemp.setX(caravanatemp.getX()-1);}
+                //cima
+                if((partes[2][0]=='C')&&(
+                ((buffer->getpos(caravanatemp.getX(),caravanatemp.getY()-1)=='.')
+                ||(((buffer->getpos(caravanatemp.getX(),caravanatemp.getY()-1)=='m'))&&(caravanatemp.getTipocar()=='S')))
+                ||isLetraMinusculaChar(buffer->getpos(caravanatemp.getX(),caravanatemp.getY()+1))
+                )){caravanatemp.setY(caravanatemp.getY()-1);}
+                //abaixo
+                if((partes[2][0]=='B')&&(
+                ((buffer->getpos(caravanatemp.getX(),caravanatemp.getY()+1)=='.')
+                ||(((buffer->getpos(caravanatemp.getX(),caravanatemp.getY()+1)=='m'))&&(caravanatemp.getTipocar()=='S')))
+                ||isLetraMinusculaChar(buffer->getpos(caravanatemp.getX(),caravanatemp.getY()+1))
+                )){caravanatemp.setY(caravanatemp.getY()+1);}
+                //cima direita
+                if((partes[2][0]=='C' && partes[2][1]=='D')&&(
+                ((buffer->getpos(caravanatemp.getX()+1,caravanatemp.getY()-1)=='.')
+                ||(((buffer->getpos(caravanatemp.getX()+1,caravanatemp.getY()-1)=='m'))&&(caravanatemp.getTipocar()=='S')))
+                ||isLetraMinusculaChar(buffer->getpos(caravanatemp.getX()+1,caravanatemp.getY()-1))
+                )){
+                    caravanatemp.setX(caravanatemp.getX()+1);
+                    caravanatemp.setY(caravanatemp.getY()-1);
+                }
+
+                //cima esquerda
+                if((partes[2][0]=='C' && partes[2][1]=='E')&&(
+                ((buffer->getpos(caravanatemp.getX()-1,caravanatemp.getY()-1)=='.')
+                ||(((buffer->getpos(caravanatemp.getX()-1,caravanatemp.getY()-1)=='m'))&&(caravanatemp.getTipocar()=='S')))
+                ||isLetraMinusculaChar(buffer->getpos(caravanatemp.getX()-1,caravanatemp.getY()-1))
+                )){
+                    caravanatemp.setX(caravanatemp.getX()-1);
+                    caravanatemp.setY(caravanatemp.getY()-1);
+                }
+
+                //baixo direita
+                if((partes[2][0]=='B' && partes[2][1]=='D')&&(
+                ((buffer->getpos(caravanatemp.getX()+1,caravanatemp.getY()+1)=='.')
+                ||(((buffer->getpos(caravanatemp.getX()+1,caravanatemp.getY()+1)=='m'))&&(caravanatemp.getTipocar()=='S')))
+                ||isLetraMinusculaChar(buffer->getpos(caravanatemp.getX()+1,caravanatemp.getY()+1))
+                )){
+                    caravanatemp.setX(caravanatemp.getX()+1);
+                    caravanatemp.setY(caravanatemp.getY()+1);
+                }
+
+                //baixo esquerda
+                if((partes[2][0]=='B' && partes[2][1]=='E')&&(
+                ((buffer->getpos(caravanatemp.getX()-1,caravanatemp.getY()+1)=='.')
+                ||(((buffer->getpos(caravanatemp.getX()-1,caravanatemp.getY()+1)=='m'))&&(caravanatemp.getTipocar()=='S')))
+                ||isLetraMinusculaChar(buffer->getpos(caravanatemp.getX()-1,caravanatemp.getY()+1))
+                )){
+                    caravanatemp.setX(caravanatemp.getX()-1);
+                    caravanatemp.setY(caravanatemp.getY()+1);
+                }
+
+
 
                 if (flagUserSystem==1){
                         caravanas[icNcaravana]=caravanatemp;
