@@ -4,9 +4,13 @@
 using namespace std;
 
 int main() {
-    Simulador simulador;
-    cin.ignore();
-    simulador.run();
+    int operacao=0;
+    while (operacao==0){
+        Simulador simulador;
+        cin.ignore();
+        simulador.run();
+        operacao=simulador.getremake();
+    }
     return 0;
 }
 //git test

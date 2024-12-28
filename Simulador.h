@@ -23,11 +23,12 @@ class Simulador {
     Cidade *cidades;
     Montanhas *montanhas;
     Caravanas *caravanas;
-    Buffer *saves;
+    Buffer saves[10];
     int nsaves=0;
     int *posicaoAutocaravanasInicial;
     User *user;
-
+    int runvalid=0;
+    int remake=0;
     Buffer *buffer;
     int* posicoes;
 
@@ -72,6 +73,14 @@ public:
     void escreveData() const;
 
     ~Simulador();
+
+    int getremake() {
+        return remake;
+    }
+
+    void setremake(int i) {
+        remake = i;
+    }
 
     void executaComando(const string& linha);
     bool isNumeroPositivo(const string& str);

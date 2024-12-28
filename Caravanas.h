@@ -6,10 +6,10 @@ using namespace std;
 
 class Caravanas {
     int idcar,preco,nagua,ntripulantes,maxtripulantes;
-    int carvida,carataque,velocidade,naguaMax=100,carga=1,cargaMax=5;
+    int carvida,carataque,velocidade,naguaMax=100,cargaMax=5;
     char tipocar;
     string mercadoria[10];
-    int mercadoriaCidade=0;
+    int mercadoriaCidade=1;
     int x,y;
 
 public:
@@ -80,7 +80,7 @@ public:
             preco=10;
             nagua=50;
             naguaMax=200;
-            carga=5;
+            mercadoriaCidade=5;
             cargaMax=40;
             ntripulantes=20;
             maxtripulantes=50;
@@ -93,7 +93,7 @@ public:
             preco=10;
             nagua=20;
             naguaMax=400;
-            carga=1;
+            mercadoriaCidade=1;
             cargaMax=5;
             ntripulantes=20;
             maxtripulantes=40;
@@ -106,7 +106,7 @@ public:
             preco=10;
             nagua=50;
             naguaMax=200;
-            carga=25;
+            mercadoriaCidade=25;
             cargaMax=100;
             ntripulantes=50;
             maxtripulantes=200;
@@ -119,7 +119,7 @@ public:
             preco=999999;
             nagua=0;
             naguaMax=400;
-            carga=1;
+            mercadoriaCidade=1;
             cargaMax=5;
             ntripulantes=40;
             maxtripulantes=40;

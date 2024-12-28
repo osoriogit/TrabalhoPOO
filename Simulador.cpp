@@ -196,10 +196,10 @@ void Simulador::escreveBuffer() {
 }
 void Simulador::escreveMapa(){
     escreveBuffer();
-    //write user
+    /*/write user/*
     int tmpx=caravanas->getX();
     int tmpy=caravanas->getY();
-    buffer->escreve(tmpx,tmpy,'U');
+    buffer->escreve(tmpx,tmpy,'U');*/
     //imprimebuffer
     std::cout << buffer[0];
 }
@@ -293,7 +293,7 @@ void Simulador::executaComando(const string& linha) {
                                 if (caravanas[i].getTipocar()==cNcaravana && icNcaravana==-1)
                                     {
                                     icNcaravana=i;
-                                    std::cout <<"\nA cidade "<<cNcidade<<"tem a autocaravana do tipo "<<partes[2][0]<<"disponivel";
+                                    std::cout <<"\nA cidade "<<cNcidade<<" tem a autocaravana do tipo "<<partes[2][0]<<"disponivel";
                                     }
                             }
                             if (icNcaravana==-1){cout <<"\nautocaravana desse tipo não diponivel";break;}
@@ -305,7 +305,7 @@ void Simulador::executaComando(const string& linha) {
                                     caravanas[nCaravanas-1]=caravanas[icNcaravana];
                                     caravanas[icNcaravana]=CaravanaTemp;
                                 }else {
-                                    std::cout <<"\nO user não tem dinheiro suficiente para a autocaravana"<<cNcaravana;
+                                    std::cout <<"\nO user nao tem dinheiro suficiente para a autocaravana"<<cNcaravana;
                                     break;
                                 }
 
@@ -323,7 +323,7 @@ void Simulador::executaComando(const string& linha) {
             /* precos – Lista os preços das mercadorias (igual em todas as cidades).
             // void listaPrecos();*/
             cout << "\nComando 'precos'" << endl;
-            cout <<"\npreço mercadorias: "<<precoMercadoriaVenda<<endl;
+            cout <<"\npreco mercadorias: "<<precoMercadoriaVenda<<endl;
             break;
         case 5:
             // cidade <C> - Lista conteúdo da cidade C (caravanas existentes)
@@ -428,7 +428,7 @@ void Simulador::executaComando(const string& linha) {
                 }
                 if (icNcaravana==-1){cout <<"\nautocaravana com esse nome não diponivel";break;}
                 char cNcidade;
-                int icNcidade=-1;
+                int icNcidade=1;//1 para testes -1default
                 for (int i = 0; i < nCidades; ++i) {
                     if (cidades[i].getX()==caravanatemp.getX() && cidades[i].getY()==caravanatemp.getY()){
                         icNcidade=i;
@@ -438,9 +438,10 @@ void Simulador::executaComando(const string& linha) {
                 }
                 if (icNcidade==-1){cout <<"\nautocaravana não se encontra numa cidade";break;}
 
-                int quilos=cidades[icNcidade].sellmercadoria(partes[2][0]);
+                int quilos=cidades[icNcidade].sellmercadoria(stoi(&partes[2][0]));
                 if (quilos==-1){cout<<"\ncidade nao tem mercadoria suficiente";break;}
                 caravanatemp.novamercadoria(quilos);
+                cout<<"\ncompra efetuada com sucesso";
                 if (flagUserSystem==1){
                         caravanas[icNcaravana]=caravanatemp;
                 }
@@ -542,14 +543,19 @@ void Simulador::executaComando(const string& linha) {
             // auto <N> - Coloca a caravana N em “auto-gestão”, ou seja, a caravana passa a ter o seu comportamento
             //automático, seja ele qual for, mesmo que seja “ficar parado”
             // void executaAuto(stoi(partes[1]));
+                //chama funcao e envia ponteiro de variavel
+                    //gerar de 0 a X
+                        //autocaravana anda
+                        //autocaravana não faz nada
             cout << "\nComando 'auto'" << endl;
             break;
         case 11:
             // stop <N> - A caravana com o número N pára o comportamento automático
             // void executaStop(stoi(partes[1]));
+                //muda variavel do ponteiro de variavel
             cout << "\nComando 'stop'" << endl;
             break;
-        case 12:
+        case 12:// esta a corromper a memoria
             // barbaro <l> <c> - Cria uma caravana barbara nas coordenadas (l, c)
             // void criaCaravanaBarbaro(stoi(partes[1]), stoi(partes[2]));
             cout << "\nComando 'barbaro'" << endl;
@@ -558,20 +564,20 @@ void Simulador::executaComando(const string& linha) {
                 char cNcidade;
                 int icNcidade=-1;
                 for (int i = 0; i < nCaravanas; ++i) {
-                    if (caravanas[i].getX()==partes[2][0]&& caravanas[i].getY()==partes[1][0]){
+                    if (caravanas[i].getX()==stoi(&partes[2][0])&& caravanas[i].getY()==stoi(&partes[1][0])){
                         std::cout <<"\nERRO";
                         break;
                     }
                 }
                 for (int i = 0; i < nCaravanasVendidas; ++i) {
-                    if (user->getusercars(i).getX()==partes[2][0]&&user->getusercars(i).getY()==partes[1][0]){
+                    if (user->getusercars(i).getX()==stoi(&partes[2][0])&&user->getusercars(i).getY()==stoi(&partes[1][0])){
                         std::cout <<"\nERRO";
                         break;
                     }
                 }
 
                 Caravanas temp[nCaravanas+1];
-                for (int i = 0; i < nCaravanas; ++i) {
+                for (int i = 0; i < nCaravanas-1; ++i) {
                     temp[i]=caravanas[i];
                 }
                 Caravanas Barbaro;
@@ -579,9 +585,12 @@ void Simulador::executaComando(const string& linha) {
                 temp[nCaravanas]=Barbaro;
                 nCaravanas++;
                 caravanas=new Caravanas[nCaravanas];
-                for (int i = 0; i < nCaravanas; ++i) {
+                for (int i = 0; i < nCaravanas-1; ++i) {
                     caravanas[i]=temp[i];
                 }
+                caravanas[nCaravanas-1].setTipocar('B');
+                caravanas[nCaravanas-1].setY(stoi(&partes[1][0]));
+                caravanas[nCaravanas-1].setX(stoi(&partes[2][0]));
                 break;
             }
         case 13:
@@ -590,18 +599,19 @@ void Simulador::executaComando(const string& linha) {
             // void executaAreia(stoi(partes[1]), stoi(partes[2]), stoi(partes[3]))
             cout << "\nComando 'areia'" << endl;
             escreveBuffer();
-            if((buffer->getpos(partes[2][0],partes[1][0]))=='.') {
+            if((buffer->getpos(stoi(&partes[2][0]),stoi(&partes[1][0])))=='.') {
                 //executa tempestade
                 //quem esta na area e afetar
                 //%50prob Comercio de ser destruida
             }
             else{/*erro*/}
             break;
-        case 14:
+        case 14:// erro ao adicionar moedas
             // moedas <N> - Acrescenta N moedas ao jogador (pode ser um valor negativo). Isto serve para testes
             // void executaMoedas(stoi(partes[1]));
             cout << "\nComando 'moedas'" << endl;
-            user->addmoedas(partes[1][0]);
+            user->addmoedas(stoi(&partes[1][0]));
+            std::cout << user->getmoedas();
             break;
         case 15:
             // tripul <N> <T> - Compra T tripulantes para a caravana N desde que essa caravana esteja numa cidade
@@ -660,21 +670,9 @@ void Simulador::executaComando(const string& linha) {
             //memória associando-o ao nome indicado
             // void executaSaves(partes[1]);
             cout << "\nComando 'saves'" << endl;
-            if (nsaves==0){
+            {
                 nsaves++;
-                saves=new Buffer[nsaves];
-                saves[0]=*buffer;
-            }else {
-                nsaves++;
-                Buffer tempsaves[nsaves];
-                for (int i = 0; i < nsaves; ++i) {
-                    tempsaves[i]=saves[i];
-                }
-                saves=new Buffer[nsaves];
-                for (int i = 0; i < nsaves; ++i) {
-                    saves[i]=tempsaves[i];
-                }
-                saves[nsaves-1]=*buffer;
+                saves[partes[1][0]]=*buffer;
             }
             break;
         case 17:
@@ -684,6 +682,9 @@ void Simulador::executaComando(const string& linha) {
             // void executaLoads(partes[1]);
             cout << "\nComando 'loads'" << endl;
             *buffer=saves[partes[1][0]];
+            //imprimebuffer
+            std::cout << buffer[0];
+            escreveBuffer();
             break;
         case 18:
             // lists - Lista os nomes das cópias do buffer existentes
@@ -698,17 +699,9 @@ void Simulador::executaComando(const string& linha) {
             // void executaDels(partes[1]);
             cout << "\nComando 'dels'" << endl;
             {
-                saves[partes[1][0]]=saves[nsaves-1];
-
+                Buffer a;
+                saves[partes[1][0]]=a;
                 nsaves--;
-                Buffer tempsaves[nsaves];
-                for (int i = 0; i < nsaves; ++i) {
-                    tempsaves[i]=saves[i];
-                }
-                saves=new Buffer[nsaves];
-                for (int i = 0; i < nsaves; ++i) {
-                    saves[i]=tempsaves[i];
-                }
             }
             break;
         case 20:
@@ -716,6 +709,9 @@ void Simulador::executaComando(const string& linha) {
             //o utilizador pode iniciar nova simulação, ou sair do programa
             // void executaTerminar();
             cout << "\nComando 'terminar'" << endl;
+            setremake(0);
+            runvalid=1;
+
             break;
         default:
             cout << "\nComando nao existe!" << endl;
@@ -780,17 +776,21 @@ bool Simulador::verificaComando(const string& linha) {
         cout << "\n\nComando invalido!" << endl;
         return false;
     }
-
+    if (comando == "terminar" && parametrosRecebidos == 0) {
+        return true;
+    }
     // Validações especificas
-    if (comando == "config" && parametrosRecebidos == 1) {
+    /*if (comando == "config" && parametrosRecebidos == 1) {
         if (partes[1].empty()) {
             cout << "\n\nComando invalido!" << endl;
             return false;
         }
-    } else if( comando == "sair" && parametrosRecebidos == 0) {
+    } else*/
+    if( comando == "sair" && parametrosRecebidos != 0) {
         cout << "\n\nComando invalido!" << endl;
         return false;
-    } else if (comando == "exec" && parametrosRecebidos == 1) {
+    }
+    if (comando == "exec" && parametrosRecebidos == 1) {
         if (partes[1].empty()) {
             cout << "\n\nComando invalido!" << endl;
             return false;
@@ -808,7 +808,7 @@ bool Simulador::verificaComando(const string& linha) {
                 return false;
             }
         }
-    } else if (comando == "precos" && parametrosRecebidos == 0) {
+    } else if (comando == "precos" && parametrosRecebidos != 0) {
         cout << "\n\nComando invalido!" << endl;
         return false;
     } else if (comando == "cidade" && parametrosRecebidos == 1) {
@@ -827,7 +827,7 @@ bool Simulador::verificaComando(const string& linha) {
             return false;
         }
     } else if (comando == "vende" && parametrosRecebidos == 1) {
-        if (!isNumeroPositivo(partes[1]) || !isNumero0_9(stoi(partes[1]))) {
+        if (isLetraMinuscula(partes[1])) {
             cout << "\n\nComando invalido!" << endl;
             return false;
         }
@@ -838,12 +838,12 @@ bool Simulador::verificaComando(const string& linha) {
             return false;
         }
     }else if (comando == "auto" && parametrosRecebidos == 1) {
-        if (!isNumeroPositivo(partes[1]) || !isNumero0_9(stoi(partes[1]))) {
+        if (isLetraMinuscula(partes[1])) {
             cout << "\n\nComando invalido!" << endl;
             return false;
         }
     } else if (comando == "stop" && parametrosRecebidos == 1) {
-        if (!isNumeroPositivo(partes[1]) || !isNumero0_9(stoi(partes[1]))) {
+        if (isLetraMinuscula(partes[1])) {
             cout << "\n\nComando invalido!" << endl;
             return false;
         }
@@ -864,7 +864,7 @@ bool Simulador::verificaComando(const string& linha) {
             }
         }
     } else if (comando == "moedas" && parametrosRecebidos == 1) {
-        if (!isdigit(stoi(partes[1]))) {
+        if (!isNumeroPositivo(partes[1])) {
             cout << "\n\nComando invalido!" << endl;
             return false;
         }
@@ -903,10 +903,13 @@ void Simulador::run() {
     string comando;
     static int runIteracoes = 0;
     while (true) {
-        cout << " Comando: ";
+        //funcao combate que procura autocaravanas perto de autocaravanas B e efetua o combate
+        if (runvalid!=0) {break;}
+        cout << "\nComando: ";
         getline(cin, comando);
 
         if (comando == "sair") {
+            setremake(1);
             cout << "Programa terminou." << endl;
             break;
         }
@@ -1089,7 +1092,6 @@ Simulador::~Simulador() {
     delete[] posicoes;
     delete[] montanhas;
     delete[] caravanas;
-    delete[] saves;
     delete user;
     delete buffer;
 }
