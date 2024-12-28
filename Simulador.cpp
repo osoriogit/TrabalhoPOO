@@ -398,7 +398,7 @@ void Simulador::executaComando(const string& linha) {
 
             }
             break;
-        case 7:
+        case 7://7
             // compra <N> <M> - Compra M toneladas de mercadorias para a caravana N, o qual deverá estar numa
             //cidade nessa altura
             // void executaCompra(stoi(partes[1]), stoi(partes[2]));
