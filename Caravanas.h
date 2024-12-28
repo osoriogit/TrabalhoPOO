@@ -6,7 +6,7 @@ using namespace std;
 
 class Caravanas {
     int idcar,preco,nagua,ntripulantes,maxtripulantes;
-    int carvida,carataque,velocidade;
+    int carvida,carataque,velocidade,naguaMax=100,carga=1,cargaMax=5;
     char tipocar;
     string mercadoria[10];
     int mercadoriaCidade=0;
@@ -74,6 +74,61 @@ public:
             mercadoriaCidade-=i;
             return i;
         } else {return -1;}
+    }
+    void setTipocar(char tipocar) {
+        if (tipocar == 'C') {
+            preco=10;
+            nagua=50;
+            naguaMax=200;
+            carga=5;
+            cargaMax=40;
+            ntripulantes=20;
+            maxtripulantes=50;
+            carvida=100;
+            carataque=100;
+            velocidade=1;
+            this->tipocar=tipocar;
+            mercadoria[9]={"mina"};
+        } else if (tipocar == 'M') {
+            preco=10;
+            nagua=20;
+            naguaMax=400;
+            carga=1;
+            cargaMax=5;
+            ntripulantes=20;
+            maxtripulantes=40;
+            carvida=100;
+            carataque=100;
+            velocidade=1;
+            this->tipocar=tipocar;
+            mercadoria[9]={"cpandora"};
+        }else if (tipocar == 'S') {
+            preco=10;
+            nagua=50;
+            naguaMax=200;
+            carga=25;
+            cargaMax=100;
+            ntripulantes=50;
+            maxtripulantes=200;
+            carvida=300;
+            carataque=150;
+            velocidade=2;
+            this->tipocar=tipocar;
+            mercadoria[9]={"tesouro"};
+        } else if (tipocar == 'B'){
+            preco=999999;
+            nagua=0;
+            naguaMax=400;
+            carga=1;
+            cargaMax=5;
+            ntripulantes=40;
+            maxtripulantes=40;
+            carvida=100;
+            carataque=100;
+            velocidade=1;
+            this->tipocar=tipocar;
+            mercadoria[9]={"mina"};
+        }
     }
 
     Caravanas(char idcar=' ',char tipocar='C');

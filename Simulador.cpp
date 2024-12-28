@@ -82,6 +82,8 @@ Simulador::Simulador(){
     }
 
     caravanas=new Caravanas[nCaravanas];
+    int ntipo=0;//set tipo caravana
+
     for (int i = 0; i < nCaravanas; ++i) {
         int randomX=posicoes[pC*2];
         posicoes[0]=-1;
@@ -92,8 +94,25 @@ Simulador::Simulador(){
         caravanas[i].setX(randomX);
         caravanas[i].setY(randomY);
         //set tipo caravana
+        if (ntipo==0) {
+            //C
+            caravanas[i].setTipocar('C');
+        }
+        if (ntipo==1) {
+            //M
+            caravanas[i].setTipocar('M');
+        }
+        if (ntipo==2) {
+            //S
+            caravanas[i].setTipocar('S');
+        }
+        if (ntipo==3) {
+            //B
+            caravanas[i].setTipocar('B');
+            ntipo=-1;
+        }
+        ntipo++;
     }
-
     montanhas= new Montanhas[nMontanhas];
     for (int i = 0; i < nMontanhas; ++i) {
         int randomX=posicoes[pC*2];
@@ -508,6 +527,7 @@ void Simulador::executaComando(const string& linha) {
                 }
                 if (icNcaravana==-1){cout <<"\nautocaravana com esse nome não diponivel";break;}
                 //fazer mover a autocaravana temp garantir que só se move para cima de montanhas se for do tipo secreto
+
                 if (flagUserSystem==1){
                         caravanas[icNcaravana]=caravanatemp;
                 }
@@ -531,6 +551,27 @@ void Simulador::executaComando(const string& linha) {
             // barbaro <l> <c> - Cria uma caravana barbara nas coordenadas (l, c)
             // void criaCaravanaBarbaro(stoi(partes[1]), stoi(partes[2]));
             cout << "\nComando 'barbaro'" << endl;
+            //verificar se é as cordenadas existem e se esta la alguma montanha ou alguma caravana
+            {
+                if (partes[1][0]>dLinhas){ cout << "erro"; break;}
+                if (partes[2][0]>dColunas){ cout << "erro"; break;}
+                char cNcidade;
+                int icNcidade=-1;
+                for (int i = 0; i < nCaravanas; ++i) {
+                    if (caravanas[i].getX()==partes[2][0]&& caravanas[i].getY()==partes[1][0]){
+                        std::cout <<"\nERRO";
+                        break;
+                    }
+                }
+                for (int i = 0; i < nCaravanasVendidas; ++i) {
+                    if (user->getusercars(i).getX()==partes[2][0]&&user->getusercars(i).getY()==partes[1][0]){
+                        std::cout <<"\nERRO";
+                        break;
+                    }
+                }
+            }
+            //substituicao do array dinamico de autocaravanas por uma copia com a barbara adicionada
+            //crias novo temp maior, copia do antigo para o temp, cria novo objeto caravana, free temp
             break;
         case 13:
             // areia <l> <c> <r> - Cria uma tempestade de areia na posição l, c com raio r posições (é um quadrado de
@@ -678,7 +719,7 @@ bool Simulador::verificaComando(const string& linha) {
             return false;
         }
     } else if (comando == "caravana" && parametrosRecebidos == 1) {
-        if (!isNumeroPositivo(partes[1]) || !isNumero0_9(stoi(partes[1]))) {
+        if (isLetraMinuscula(partes[1])) {
             cout << "\n\nComando invalido!" << endl;
             return false;
         }
