@@ -248,7 +248,7 @@ void Simulador::executaComando(const string& linha) {
 
     // Switch para tratar os comandos
     switch (identificadorComando) {
-        case 1://faz esta afonso pls haha simples pls
+        case 1:
             /* exec <nomeFicheiro> - Lê comandos do ficheiro de texto designado por nomeFicheiro, um por linha, e
             executa-os. Este comando é muito útil para executar um conjunto de comandos predefinido, previamente
             gravados num ficheiro. Permite, assim, poupar imenso tempo durante os testes, carregando uma
@@ -258,8 +258,19 @@ void Simulador::executaComando(const string& linha) {
             onde vêm os caracteres que o compõem (do teclado vs. de um ficheiro).
              void executaExec();
             Usar aqui funcao recursiva fazer como ultimo comando*/
-            cout << "\nComando 'exec'" << endl;
-            break;
+            {
+                cout << "\nComando 'exec'" << endl;
+                string comandoFicheiro;
+                string nomeFicheiroC = partes[1];
+
+                ifstream f(nomeFicheiroC);
+                if(f) {
+                    while (getline(f, comandoFicheiro)) {
+                        executaComando(comandoFicheiro);
+                    }
+                }
+                break;
+            }
         case 2:
             /* prox <n> – Termina a fase de indicação dos comandos e vai ter início a fase de execução de comandos
             //pendentes e comportamentos automáticos. n é opcional, e maior que 0, e indica o número de instantes a
@@ -532,25 +543,25 @@ void Simulador::executaComando(const string& linha) {
                 //fazer mover a autocaravana temp garantir que só se move para cima de montanhas se for do tipo secreto
                 escreveBuffer();
                 //direita
-                if((partes[2][0]=='D')&&(
+                if((partes[2][0]=='D'&& partes[2][1]==NULL)&&(
                 ((buffer->getpos(caravanatemp.getX()+1,caravanatemp.getY())=='.')
                 ||(((buffer->getpos(caravanatemp.getX()+1,caravanatemp.getY())=='m'))&&(caravanatemp.getTipocar()=='S')))
                 ||isLetraMinusculaChar(buffer->getpos(caravanatemp.getX()+1,caravanatemp.getY()))
                 )){caravanatemp.setX(caravanatemp.getX()+1);}
                 //esquerda
-                if((partes[2][0]=='E')&&(
+                if((partes[2][0]=='E'&& partes[2][1]==NULL)&&(
                 ((buffer->getpos(caravanatemp.getX()-1,caravanatemp.getY())=='.')
                 ||(((buffer->getpos(caravanatemp.getX()-1,caravanatemp.getY())=='m'))&&(caravanatemp.getTipocar()=='S')))
                 ||isLetraMinusculaChar(buffer->getpos(caravanatemp.getX()-1,caravanatemp.getY()))
                 )){caravanatemp.setX(caravanatemp.getX()-1);}
                 //cima
-                if((partes[2][0]=='C')&&(
+                if((partes[2][0]=='C'&& partes[2][1]==NULL)&&(
                 ((buffer->getpos(caravanatemp.getX(),caravanatemp.getY()-1)=='.')
                 ||(((buffer->getpos(caravanatemp.getX(),caravanatemp.getY()-1)=='m'))&&(caravanatemp.getTipocar()=='S')))
                 ||isLetraMinusculaChar(buffer->getpos(caravanatemp.getX(),caravanatemp.getY()+1))
                 )){caravanatemp.setY(caravanatemp.getY()-1);}
                 //abaixo
-                if((partes[2][0]=='B')&&(
+                if((partes[2][0]=='B'&& partes[2][1]==NULL)&&(
                 ((buffer->getpos(caravanatemp.getX(),caravanatemp.getY()+1)=='.')
                 ||(((buffer->getpos(caravanatemp.getX(),caravanatemp.getY()+1)=='m'))&&(caravanatemp.getTipocar()=='S')))
                 ||isLetraMinusculaChar(buffer->getpos(caravanatemp.getX(),caravanatemp.getY()+1))
@@ -594,7 +605,7 @@ void Simulador::executaComando(const string& linha) {
                     caravanatemp.setX(caravanatemp.getX()-1);
                     caravanatemp.setY(caravanatemp.getY()+1);
                 }
-
+                escreveBuffer();
 
 
                 if (flagUserSystem==1){
@@ -609,8 +620,8 @@ void Simulador::executaComando(const string& linha) {
             // auto <N> - Coloca a caravana N em “auto-gestão”, ou seja, a caravana passa a ter o seu comportamento
             //automático, seja ele qual for, mesmo que seja “ficar parado”
             // void executaAuto(stoi(partes[1]));
-                //chama funcao e envia ponteiro de variavel
-                    //gerar de 0 a X
+                //chama funcao e envia runiteracoes
+                    //a cada runiteracoes gerar de 0 a X
                         //autocaravana anda
                         //autocaravana não faz nada
             cout << "\nComando 'auto'" << endl;
@@ -621,7 +632,7 @@ void Simulador::executaComando(const string& linha) {
                 //muda variavel do ponteiro de variavel
             cout << "\nComando 'stop'" << endl;
             break;
-        case 12:// esta a corromper a memoria
+        case 12:
             // barbaro <l> <c> - Cria uma caravana barbara nas coordenadas (l, c)
             // void criaCaravanaBarbaro(stoi(partes[1]), stoi(partes[2]));
             cout << "\nComando 'barbaro'" << endl;
@@ -641,7 +652,7 @@ void Simulador::executaComando(const string& linha) {
                         break;
                     }
                 }
-
+                /*
                 Caravanas temp[nCaravanas+1];
                 for (int i = 0; i < nCaravanas-1; ++i) {
                     temp[i]=caravanas[i];
@@ -650,11 +661,26 @@ void Simulador::executaComando(const string& linha) {
                 //atualizar parametros barbaro e erros melhor exibidos
                 temp[nCaravanas]=Barbaro;
                 nCaravanas++;
+                delete[] caravanas;
                 caravanas=new Caravanas[nCaravanas];
                 for (int i = 0; i < nCaravanas-1; ++i) {
                     caravanas[i]=temp[i];
+                }*/
+                Caravanas* temp = new Caravanas[nCaravanas + 1];
+
+                for (int i = 0; i < nCaravanas; ++i) {
+                    temp[i] = caravanas[i];
                 }
+
+                Caravanas Barbaro;
+                temp[nCaravanas] = Barbaro;
+                nCaravanas++;
+
+                delete[] caravanas;
+                caravanas = temp;
+
                 caravanas[nCaravanas-1].setTipocar('B');
+                caravanas[nCaravanas-1].setIdcar('Z'-nCaravanas+5);
                 caravanas[nCaravanas-1].setY(stoi(&partes[1][0]));
                 caravanas[nCaravanas-1].setX(stoi(&partes[2][0]));
                 break;
@@ -672,7 +698,7 @@ void Simulador::executaComando(const string& linha) {
             }
             else{/*erro*/}
             break;
-        case 14:// erro ao adicionar moedas
+        case 14:
             // moedas <N> - Acrescenta N moedas ao jogador (pode ser um valor negativo). Isto serve para testes
             // void executaMoedas(stoi(partes[1]));
             cout << "\nComando 'moedas'" << endl;
@@ -775,6 +801,12 @@ void Simulador::executaComando(const string& linha) {
             //o utilizador pode iniciar nova simulação, ou sair do programa
             // void executaTerminar();
             cout << "\nComando 'terminar'" << endl;
+            //fazer pontoação
+            cout << "Pontoação" << endl;
+            int pontoacaoooo;
+            for (int i = 0; i < nCaravanasVendidas; ++i) {
+             pontoacaoooo+=user->getusercars(i).getmercadoriaCidade();
+            }
             setremake(0);
             runvalid=1;
 
@@ -969,7 +1001,7 @@ void Simulador::run() {
     string comando;
     static int runIteracoes = 0;
     while (true) {
-        //funcao combate que procura autocaravanas perto de autocaravanas B e efetua o combate
+        //funcao combate que procura autocaravanas perto de autocaravanas B e efetua o combate e efetua as acoes dos itens
         if (runvalid!=0) {break;}
         cout << "\nComando: ";
         getline(cin, comando);

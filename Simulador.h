@@ -9,6 +9,7 @@
 #include "Montanhas.h"
 #include "User.h"
 #include <fstream>
+#include <string.h>
 using namespace std;
 
 class Simulador {
