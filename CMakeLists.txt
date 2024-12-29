@@ -15,4 +15,5 @@ add_executable(WORKC main.cpp
         mapa.txt
         buffer.cpp
         Montanhas.cpp
+        item.h
 )
