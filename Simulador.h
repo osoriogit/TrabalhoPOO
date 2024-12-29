@@ -10,6 +10,9 @@
 #include "User.h"
 #include <fstream>
 #include <string.h>
+#include "item.h"
+
+#include "item.h"
 using namespace std;
 
 class Simulador {
@@ -28,6 +31,7 @@ class Simulador {
     int nsaves=0;
     int *posicaoAutocaravanasInicial;
     User *user;
+    item *itens;
     int runvalid=0;
     int remake=0;
     Buffer *buffer;
@@ -92,6 +96,8 @@ public:
     bool isLetraMinuscula(const string& letra);
     bool isNumero0_9(int num);
     bool verificaComando(const string &linha);
+
+    void combate();
 
     void run();
 

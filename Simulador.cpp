@@ -80,6 +80,24 @@ Simulador::Simulador(){
         cidades[i].setTripulantes(nTripulantes);
 
     }
+    int ntipoitem=0;//set tipo item
+    itens= new item[maxItens];
+    for (int i = 0; i < nCidades; ++i) {
+        int randomX=posicoes[pC*2];
+        posicoes[0]=-1;
+        int randomY=posicoes[pC*2+1];
+        posicoes[1]=-1;
+        pC++;
+        //std::cout << randomY;
+        itens[i].set_x(randomX);
+        itens[i].set_y(randomY);
+        itens[i].set_tipo(ntipoitem);
+        ntipoitem++;
+        if (ntipoitem==2) {//2 para 2 tipos de itens
+            ntipoitem=0;
+        }
+
+    }
 
     caravanas=new Caravanas[nCaravanas];
     int ntipo=0;//set tipo caravana
@@ -1001,7 +1019,9 @@ void Simulador::run() {
     string comando;
     static int runIteracoes = 0;
     while (true) {
-        //funcao combate que procura autocaravanas perto de autocaravanas B e efetua o combate e efetua as acoes dos itens
+        //funcao combate que procura autocaravanas perto de autocaravanas B
+        //e efetua o combate e efetua as acoes dos itens
+        combate();
         if (runvalid!=0) {break;}
         cout << "\nComando: ";
         getline(cin, comando);
@@ -1017,6 +1037,69 @@ void Simulador::run() {
         }
     }
 }
+void Simulador::combate() {
+    Caravanas temp;
+    for (int i = 0; i < nCaravanasVendidas; ++i) {
+        temp=user->getusercars(i);
+        for (int j = 0; j < nCaravanas; ++j) {
+            if ((caravanas[j].getTipocar()=='B')&&(
+                caravanas[j].getX() == temp.getX() && caravanas[j].getY() == temp.getY()
+                ||caravanas[j].getX() == temp.getX() && caravanas[j].getY()+1 == temp.getY()
+                ||caravanas[j].getX() == temp.getX() && caravanas[j].getY()-1 == temp.getY()
+                ||caravanas[j].getX()-1 == temp.getX() && caravanas[j].getY() == temp.getY()
+                ||caravanas[j].getX()-1 == temp.getX() && caravanas[j].getY()+1 == temp.getY()
+                ||caravanas[j].getX()-1 == temp.getX() && caravanas[j].getY()-1 == temp.getY()
+                ||caravanas[j].getX()+1 == temp.getX() && caravanas[j].getY() == temp.getY()
+                ||caravanas[j].getX()+1 == temp.getX() && caravanas[j].getY()+1 == temp.getY()
+                ||caravanas[j].getX()+1 == temp.getX() && caravanas[j].getY()-1 == temp.getY()))
+            {
+                {
+                    // Combat function logic
+                    int sorteioTemp = rand() % (temp.getntripulantes() + 1);       // Random value for temp caravan
+                    int sorteioBarbaro = rand() % (caravanas[j].getntripulantes() + 1); // Random value for Barbaro caravan
+
+                    if (sorteioTemp > sorteioBarbaro) {
+                        // Temp wins
+                        int perda = caravanas[j].getntripulantes() * 0.2;
+                        caravanas[j].perderTripulantes(perda);
+                        temp.adicionarTripulantes(sorteioTemp * 2);
+
+                        if (caravanas[j].getntripulantes() <= 0) {
+                            //caravanas[j].destruir(); // Mark caravan as destroyed
+                            //passar a caravana destruida para a ultima posicao
+                            Caravanas CaravanaTemp(-1,'T');
+                            CaravanaTemp=caravanas[nCaravanas-1];
+                            caravanas[nCaravanas-1]=caravanas[j];
+                            caravanas[j]=CaravanaTemp;
+                            nCaravanas--;
+                        }
+                    } else if (sorteioBarbaro > sorteioTemp) {
+                        // Barbaro wins
+                        int perda = temp.getntripulantes() * 0.2;
+                        temp.perderTripulantes(perda);
+                        caravanas[j].adicionarTripulantes(sorteioBarbaro * 2);
+
+                        if (temp.getntripulantes() <= 0) {
+                            //temp.destruir(); // Mark temp caravan as destroyed
+                            user->destructc(i,nCaravanasVendidas);
+                            nCaravanasVendidas--;
+                        }
+                    } else {
+                        // Tie - no changes to either caravan
+                        continue;
+                    }
+                }
+            }
+            }
+        }
+        for (int j = 0; j <maxItens; ++j) {
+            if (temp.getX()==itens[j].x1()&&temp.getY()==itens[j].y1()) {
+                if (itens[j].tipo1()==0){}//exucuta para o item tipo 0
+                if (itens[j].tipo1()==1){}//exucuta para o item tipo 1
+            }
+        }
+    }
+
 int Simulador::getTimeEntreItens() const {
     return timeEntreItens;
 }

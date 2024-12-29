@@ -48,6 +48,13 @@ public:
     void addmoedas(int moedas) {
         this->moedas += moedas;
     }
+
+    void destructc(int i,int max) {
+        Caravanas CaravanaTemp(-1,'T');
+        CaravanaTemp=usercars[max-1];
+        usercars[max-1]=usercars[i];
+        usercars[i]=CaravanaTemp;
+    }
 };
 
 

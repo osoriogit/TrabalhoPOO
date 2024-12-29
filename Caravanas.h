@@ -139,6 +139,14 @@ public:
         ntripulantes+=value;
     }
 
+    void perderTripulantes(int perda) {
+        ntripulantes-=perda;
+    }
+
+    void adicionarTripulantes(int i) {
+        ntripulantes+=i;
+    }
+
     Caravanas(char idcar=' ',char tipocar='C');
     char getidcar(){return idcar;};
     void setIdcar(char i){idcar=i;};
